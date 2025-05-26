@@ -1,4 +1,8 @@
 import streamlit as st
+
+# Set this FIRST — before anything else
+st.set_page_config(page_title="Ogilvy Copy Evaluator", layout="centered")
+
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 # Model configuration
@@ -17,7 +21,6 @@ def load_pipeline():
 
 pipe = load_pipeline()
 
-# Prompt builder
 def build_prompt(content):
     return f"""<|im_start|>system
 You are an advertising strategist trained in David Ogilvy’s 15 principles.
@@ -48,10 +51,8 @@ You will be given a piece of marketing copy. Do not provide general commentary. 
 <|im_start|>assistant
 """
 
-# App interface
-st.set_page_config(page_title="Ogilvy Copy Evaluator", layout="centered")
 st.title("🧠 Ogilvy Copy Evaluator")
-st.caption("Powered by Qwen | Evaluates marketing copy using 15 Ogilvy principles")
+st.caption("Evaluate marketing copy with 15 principles from David Ogilvy — get a score, feedback, and rewrite.")
 
 user_input = st.text_area("Paste your marketing copy below:", height=200)
 
@@ -59,7 +60,7 @@ if st.button("Evaluate My Copy"):
     if not user_input.strip():
         st.warning("Please enter some marketing copy.")
     else:
-        with st.spinner("Analyzing with Ogilvy's principles..."):
+        with st.spinner("Analyzing your copy..."):
             prompt = build_prompt(user_input)
             output = pipe(prompt, max_new_tokens=1000, temperature=0.7)[0]["generated_text"]
             result = output.split("<|im_start|>assistant")[-1].strip()
