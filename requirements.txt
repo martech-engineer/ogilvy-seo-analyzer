@@ -1,2 +1,5 @@
+transformers
+accelerate
+bitsandbytes
+torch
 streamlit
-huggingface_hub
